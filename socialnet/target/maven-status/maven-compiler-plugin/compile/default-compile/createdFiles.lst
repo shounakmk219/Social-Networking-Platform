@@ -1,0 +1,4 @@
+com/project/socialnet/bean/User.class
+com/project/socialnet/controller/UserController.class
+com/project/socialnet/service/UserService.class
+com/project/socialnet/config/AppConfig.class

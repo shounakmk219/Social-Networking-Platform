@@ -1,0 +1,108 @@
+<html>
+	<head>
+	 <meta charset="UTF-8"> 
+		<script
+			src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+		
+		<title>Sign-up</title>
+		<script type="text/javascript">
+			var app=angular.module("UserManage",[]);
+			app.controller("UserController", function($scope,$http,$window){
+				$scope.lastuser="start";
+				$scope.userform={
+						Uid:-1,
+						FirstName: "",
+						LastName: "",
+						Password: "",
+						DOB: ""
+				};
+				$scope.submitUser = function() {
+			         
+                    var method = "";
+                    var url = "";
+                    var data={
+    						uid:"-1",
+    						firstName: $scope.userform.FirstName,
+    						lastName: $scope.userform.LastName,
+    						password: $scope.userform.Password,
+    						dob: $scope.userform.DOB
+                    };
+                    $scope.lastuser=$scope.userform.FirstName;
+                    if ($scope.userform.Uid == -1) {
+                    	
+                        //Id is absent in form data, it is create new country operation
+                        method = "POST";
+                        url = '/socialnet/userform';
+                    } else {
+                        //Id is present in form data, it is edit country operation
+                        method = "PUT";
+                        url = '/socialnet/userform';
+                    }
+         
+                    $http({
+                        method : method,
+                        url : url,
+                        data : angular.toJson(data),
+                        headers : {
+                            'Content-Type' : 'application/json'
+                        }
+                    }).then( _success, _error );
+				};
+
+                    function _success(response) {
+                    	$window.location.href='/socialnet/sign-in.html';
+                    	_clearFormData();
+                    }
+             
+                    function _error(response) {
+                    	_clearFormData()
+                        alert(response.statusText);
+                    }
+                    function _clearFormData() {
+                        $scope.userform.Uid = -1;
+                        $scope.userform.FirstName = "";
+                        $scope.userform.LastName = "";
+                        $scope.userform.Password = "";
+                        $scope.userform.DOB = "";
+                    };
+                
+         
+			});
+		</script>
+	</head>
+	<body>
+		<h2>Signup</h2>
+		<div ng-app="UserManage" ng-controller="UserController">
+		<form ng-submit="submitUser()">
+            <table>
+               
+                <tr>
+                    <th colspan="2">Add/Edit country</th>
+                 </tr>
+                <tr>
+                    <td>FirstName</td>
+                    <td><input type="text" ng-model="userform.FirstName" required="required"/></td>
+                </tr>
+                <tr>
+                    <td>LastName</td>
+                    <td><input type="text" ng-model="userform.LastName"  required="required"/></td>
+                </tr>
+                <tr>
+                	<td>Password</td>
+                	<td><input type="password" ng-model="userform.Password" minlength="4"  required title="Min length 4"/></td>
+                </tr>
+                <tr>
+                	<td>Birth Date</td>
+                	<td><input type="date" ng-model="userform.DOB" required="required"/></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="Submit" class="blue-button" /></td>
+                </tr>
+            </table>
+        </form>
+        
+        <h2>{{lastuser}}</h2>
+        </div>
+        
+	</body>
+</html>
